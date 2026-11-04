@@ -88,6 +88,10 @@ def recommend(record, scenario):
     order_up_to = policy_level(_quantile(protection, service))
     raw_order = max(0.0, order_up_to - stock) if stock <= reorder_point else 0.0
     order_qty = float(ceil(raw_order)) if count_unit else raw_order
+    existing_max = record.get('max_qty') if record.get('mrp_type', 'Stock Item') == 'Stock Item' else None
+    policy_conflict = bool(existing_max is not None and existing_max > 0 and order_up_to > existing_max)
+    review_draft_qty = min(order_qty, max(0.0, existing_max - stock)) if policy_conflict else order_qty
+    review_draft_qty = float(ceil(review_draft_qty)) if count_unit else round(review_draft_qty, 2)
     mean_lead = forecast * multiplier * lead_days / 30 + known_lead
     mean_protection = forecast * multiplier * protection_days / 30 + known_lead + known_review
     safety_stock = policy_level(max(0.0, reorder_point - mean_lead))
@@ -128,6 +132,9 @@ def recommend(record, scenario):
         'safety_stock': safety_stock,
         'order_up_to': round(order_up_to, 2),
         'order_qty': round(order_qty, 2),
+        'review_draft_qty': review_draft_qty,
+        'policy_conflict': policy_conflict,
+        'existing_max_qty': existing_max,
         'illustrative_lowest_cost_stock': optimum,
         'curve': curve,
         'assumptions': {

@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 import json
 
-from api.service import overview, search_materials, material_detail, simulate
+from api.service import overview, search_materials, material_detail, simulate, focus_scenarios, supplier_advice, continuity
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,6 +33,14 @@ class handler(BaseHTTPRequestHandler):
                 result = search_materials(DB, params.get('q', [''])[0], params.get('limit', ['20'])[0])
             elif route == 'material':
                 result = material_detail(DB, params.get('id', [''])[0])
+            elif route == 'focus':
+                result = focus_scenarios(DB)
+            elif route == 'supplier':
+                result = supplier_advice(DB, params.get('id', [''])[0],
+                                         params.get('decision_date', ['2026-09-30'])[0],
+                                         params.get('action', ['Monitor'])[0])
+            elif route == 'continuity':
+                result = continuity(DB)
             else:
                 return self._send(404, {'error': 'Unknown API route'})
             self._send(200, result)

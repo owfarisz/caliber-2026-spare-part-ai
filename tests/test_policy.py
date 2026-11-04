@@ -58,6 +58,13 @@ class PolicyTests(unittest.TestCase):
         self.assertEqual(result['stockout_risk_protection'], 0)
         self.assertLess(max(point['stock'] for point in result['curve']), 500)
 
+    def test_draft_quantity_respects_existing_max_and_flags_model_conflict(self):
+        result = recommend({**BASE, 'max_qty': 5.0}, {'stock': 0, 'demand_multiplier': 3})
+        self.assertGreater(result['order_up_to'], 5)
+        self.assertTrue(result['policy_conflict'])
+        self.assertLessEqual(result['review_draft_qty'], 5)
+        self.assertLessEqual(result['review_draft_qty'], result['order_qty'])
+
 
 if __name__ == '__main__':
     unittest.main()
