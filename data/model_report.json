@@ -1,0 +1,602 @@
+{
+  "as_of": "2026-09-30",
+  "horizon_days": 30,
+  "training_cutoffs": [
+    "2025-11-01",
+    "2026-05-01"
+  ],
+  "validation_cutoffs": [
+    "2026-06-01",
+    "2026-07-01"
+  ],
+  "test_cutoffs": [
+    "2026-08-01",
+    "2026-09-01"
+  ],
+  "cohort": "Only materials with at least one issue before each cutoff",
+  "metric_definitions": {
+    "normalized_mae": "Mean |actual-predicted| / historical mean positive issue-day quantity; lower is better.",
+    "brier": "Mean squared error of 30-day any-issue probability; lower is better.",
+    "selection": "Validation normalized MAE relative to zero baseline plus Brier relative to zero baseline; equal relative weight.",
+    "f1_at_50pct": "Occurrence F1 with fixed probability threshold 0.5; diagnostic only."
+  },
+  "sample_counts": {
+    "train": 9591,
+    "validation": 3502,
+    "test": 3719,
+    "active_as_of": 1930,
+    "catalog": 7481
+  },
+  "selected": {
+    "name": "hybrid",
+    "params": {
+      "max_leaf_nodes": 15,
+      "alpha": 0.005,
+      "beta": 0.1
+    },
+    "validation": {
+      "n": 3502,
+      "positive_rate": 0.14220445459737294,
+      "normalized_mae": 0.301435,
+      "normalized_bias": -0.165477,
+      "brier": 0.062641,
+      "precision_at_50pct": 0.752155,
+      "recall_at_50pct": 0.700803,
+      "f1_at_50pct": 0.725572
+    },
+    "test": {
+      "n": 3719,
+      "positive_rate": 0.1271847270771713,
+      "normalized_mae": 0.24991,
+      "normalized_bias": -0.117452,
+      "brier": 0.055984,
+      "precision_at_50pct": 0.738739,
+      "recall_at_50pct": 0.693446,
+      "f1_at_50pct": 0.715376
+    }
+  },
+  "test_comparators": {
+    "zero": {
+      "n": 3719,
+      "positive_rate": 0.1271847270771713,
+      "normalized_mae": 0.263507,
+      "normalized_bias": -0.263507,
+      "brier": 0.127185,
+      "precision_at_50pct": 0.0,
+      "recall_at_50pct": 0.0,
+      "f1_at_50pct": 0.0
+    },
+    "trailing_90": {
+      "n": 3719,
+      "positive_rate": 0.1271847270771713,
+      "normalized_mae": 0.297814,
+      "normalized_bias": 0.036898,
+      "brier": 0.067942,
+      "precision_at_50pct": 0.776812,
+      "recall_at_50pct": 0.566596,
+      "f1_at_50pct": 0.655257
+    },
+    "tsb_tuned": {
+      "n": 3719,
+      "positive_rate": 0.1271847270771713,
+      "normalized_mae": 0.321884,
+      "normalized_bias": 0.094382,
+      "brier": 0.055984,
+      "precision_at_50pct": 0.738739,
+      "recall_at_50pct": 0.693446,
+      "f1_at_50pct": 0.715376
+    },
+    "hurdle_tuned": {
+      "n": 3719,
+      "positive_rate": 0.1271847270771713,
+      "normalized_mae": 0.24991,
+      "normalized_bias": -0.117452,
+      "brier": 0.062867,
+      "precision_at_50pct": 0.876847,
+      "recall_at_50pct": 0.376321,
+      "f1_at_50pct": 0.526627
+    },
+    "hybrid_tuned": {
+      "n": 3719,
+      "positive_rate": 0.1271847270771713,
+      "normalized_mae": 0.24991,
+      "normalized_bias": -0.117452,
+      "brier": 0.055984,
+      "precision_at_50pct": 0.738739,
+      "recall_at_50pct": 0.693446,
+      "f1_at_50pct": 0.715376
+    }
+  },
+  "test_by_unit": {
+    "ASS": {
+      "n": 14,
+      "positive_rate": 0.07142857142857142,
+      "normalized_mae": 0.161771,
+      "normalized_bias": -0.11959,
+      "brier": 0.072716,
+      "precision_at_50pct": 0.0,
+      "recall_at_50pct": 0.0,
+      "f1_at_50pct": 0.0
+    },
+    "CAN": {
+      "n": 24,
+      "positive_rate": 0.5416666666666666,
+      "normalized_mae": 0.633876,
+      "normalized_bias": -0.357029,
+      "brier": 0.040723,
+      "precision_at_50pct": 0.928571,
+      "recall_at_50pct": 1.0,
+      "f1_at_50pct": 0.962963
+    },
+    "EA": {
+      "n": 2670,
+      "positive_rate": 0.1258426966292135,
+      "normalized_mae": 0.24538,
+      "normalized_bias": -0.116026,
+      "brier": 0.059273,
+      "precision_at_50pct": 0.720257,
+      "recall_at_50pct": 0.666667,
+      "f1_at_50pct": 0.692427
+    },
+    "KG": {
+      "n": 65,
+      "positive_rate": 0.47692307692307695,
+      "normalized_mae": 0.940878,
+      "normalized_bias": -0.58221,
+      "brier": 0.082122,
+      "precision_at_50pct": 0.878788,
+      "recall_at_50pct": 0.935484,
+      "f1_at_50pct": 0.90625
+    },
+    "L": {
+      "n": 44,
+      "positive_rate": 0.45454545454545453,
+      "normalized_mae": 1.102905,
+      "normalized_bias": -0.297863,
+      "brier": 0.116844,
+      "precision_at_50pct": 0.73913,
+      "recall_at_50pct": 0.85,
+      "f1_at_50pct": 0.790698
+    },
+    "LG": {
+      "n": 57,
+      "positive_rate": 0.40350877192982454,
+      "normalized_mae": 0.684949,
+      "normalized_bias": -0.455495,
+      "brier": 0.121856,
+      "precision_at_50pct": 0.72,
+      "recall_at_50pct": 0.782609,
+      "f1_at_50pct": 0.75
+    },
+    "M": {
+      "n": 54,
+      "positive_rate": 0.018518518518518517,
+      "normalized_mae": 0.056069,
+      "normalized_bias": 0.025778,
+      "brier": 0.024568,
+      "precision_at_50pct": 0.0,
+      "recall_at_50pct": 0.0,
+      "f1_at_50pct": 0.0
+    },
+    "RL": {
+      "n": 60,
+      "positive_rate": 0.38333333333333336,
+      "normalized_mae": 0.784212,
+      "normalized_bias": -0.496276,
+      "brier": 0.090101,
+      "precision_at_50pct": 0.758621,
+      "recall_at_50pct": 0.956522,
+      "f1_at_50pct": 0.846154
+    },
+    "SET": {
+      "n": 713,
+      "positive_rate": 0.03225806451612903,
+      "normalized_mae": 0.067839,
+      "normalized_bias": -0.004452,
+      "brier": 0.030662,
+      "precision_at_50pct": 0.555556,
+      "recall_at_50pct": 0.217391,
+      "f1_at_50pct": 0.3125
+    },
+    "SHT": {
+      "n": 18,
+      "positive_rate": 0.1111111111111111,
+      "normalized_mae": 0.533165,
+      "normalized_bias": -0.461119,
+      "brier": 0.107362,
+      "precision_at_50pct": 0.0,
+      "recall_at_50pct": 0.0,
+      "f1_at_50pct": 0.0
+    }
+  },
+  "validation_candidates": [
+    {
+      "name": "trailing",
+      "params": {
+        "window": 30
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.374874,
+        "normalized_bias": -0.041224,
+        "brier": 0.104635,
+        "precision_at_50pct": 0.501805,
+        "recall_at_50pct": 0.558233,
+        "f1_at_50pct": 0.528517
+      },
+      "objective": 1.8280929637931502
+    },
+    {
+      "name": "trailing",
+      "params": {
+        "window": 90
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.330271,
+        "normalized_bias": -0.074551,
+        "brier": 0.077818,
+        "precision_at_50pct": 0.790997,
+        "recall_at_50pct": 0.493976,
+        "f1_at_50pct": 0.608158
+      },
+      "objective": 1.5095504067162535
+    },
+    {
+      "name": "trailing",
+      "params": {
+        "window": 180
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.404721,
+        "normalized_bias": 0.136586,
+        "brier": 0.072947,
+        "precision_at_50pct": 0.72,
+        "recall_at_50pct": 0.686747,
+        "f1_at_50pct": 0.70298
+      },
+      "objective": 1.69222443950461
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.005,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.361174,
+        "normalized_bias": 0.05581,
+        "brier": 0.062641,
+        "precision_at_50pct": 0.752155,
+        "recall_at_50pct": 0.700803,
+        "f1_at_50pct": 0.725572
+      },
+      "objective": 1.492866632641603
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.005,
+        "beta": 0.3
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.367787,
+        "normalized_bias": 0.039869,
+        "brier": 0.062641,
+        "precision_at_50pct": 0.752155,
+        "recall_at_50pct": 0.700803,
+        "f1_at_50pct": 0.725572
+      },
+      "objective": 1.5121351683727466
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.005,
+        "beta": 0.6
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.384595,
+        "normalized_bias": 0.02891,
+        "brier": 0.062641,
+        "precision_at_50pct": 0.752155,
+        "recall_at_50pct": 0.700803,
+        "f1_at_50pct": 0.725572
+      },
+      "objective": 1.5611092419504065
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.015,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.351564,
+        "normalized_bias": 0.02286,
+        "brier": 0.06939,
+        "precision_at_50pct": 0.726244,
+        "recall_at_50pct": 0.644578,
+        "f1_at_50pct": 0.682979
+      },
+      "objective": 1.5123256173772837
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.015,
+        "beta": 0.3
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.358762,
+        "normalized_bias": 0.008054,
+        "brier": 0.06939,
+        "precision_at_50pct": 0.726244,
+        "recall_at_50pct": 0.644578,
+        "f1_at_50pct": 0.682979
+      },
+      "objective": 1.5332986886297824
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.015,
+        "beta": 0.6
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.374872,
+        "normalized_bias": -0.001852,
+        "brier": 0.06939,
+        "precision_at_50pct": 0.726244,
+        "recall_at_50pct": 0.644578,
+        "f1_at_50pct": 0.682979
+      },
+      "objective": 1.580238974525552
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.03,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.345567,
+        "normalized_bias": -0.024894,
+        "brier": 0.081908,
+        "precision_at_50pct": 0.614035,
+        "recall_at_50pct": 0.562249,
+        "f1_at_50pct": 0.587002
+      },
+      "objective": 1.5828804091286721
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.03,
+        "beta": 0.3
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.351101,
+        "normalized_bias": -0.038062,
+        "brier": 0.081908,
+        "precision_at_50pct": 0.614035,
+        "recall_at_50pct": 0.562249,
+        "f1_at_50pct": 0.587002
+      },
+      "objective": 1.5990050237870945
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.03,
+        "beta": 0.6
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.364383,
+        "normalized_bias": -0.046566,
+        "brier": 0.081908,
+        "precision_at_50pct": 0.614035,
+        "recall_at_50pct": 0.562249,
+        "f1_at_50pct": 0.587002
+      },
+      "objective": 1.6377052644616827
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.06,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.364891,
+        "normalized_bias": -0.022059,
+        "brier": 0.095884,
+        "precision_at_50pct": 0.577726,
+        "recall_at_50pct": 0.5,
+        "f1_at_50pct": 0.53606
+      },
+      "objective": 1.7374667846131062
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.06,
+        "beta": 0.3
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.368733,
+        "normalized_bias": -0.03544,
+        "brier": 0.095884,
+        "precision_at_50pct": 0.577726,
+        "recall_at_50pct": 0.5,
+        "f1_at_50pct": 0.53606
+      },
+      "objective": 1.7486613580713026
+    },
+    {
+      "name": "tsb",
+      "params": {
+        "alpha": 0.06,
+        "beta": 0.6
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.38037,
+        "normalized_bias": -0.043123,
+        "brier": 0.095884,
+        "precision_at_50pct": 0.577726,
+        "recall_at_50pct": 0.5,
+        "f1_at_50pct": 0.53606
+      },
+      "objective": 1.78256850313456
+    },
+    {
+      "name": "hurdle",
+      "params": {
+        "max_leaf_nodes": 7
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.307133,
+        "normalized_bias": -0.158819,
+        "brier": 0.066695,
+        "precision_at_50pct": 0.855372,
+        "recall_at_50pct": 0.415663,
+        "f1_at_50pct": 0.559459
+      },
+      "objective": 1.3639137691666425
+    },
+    {
+      "name": "hurdle",
+      "params": {
+        "max_leaf_nodes": 15
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.301435,
+        "normalized_bias": -0.165477,
+        "brier": 0.06692,
+        "precision_at_50pct": 0.853755,
+        "recall_at_50pct": 0.433735,
+        "f1_at_50pct": 0.575233
+      },
+      "objective": 1.3488935357887817
+    },
+    {
+      "name": "hurdle",
+      "params": {
+        "max_leaf_nodes": 31
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.303337,
+        "normalized_bias": -0.16919,
+        "brier": 0.067375,
+        "precision_at_50pct": 0.846457,
+        "recall_at_50pct": 0.431727,
+        "f1_at_50pct": 0.571809
+      },
+      "objective": 1.3576350902375627
+    },
+    {
+      "name": "hybrid",
+      "params": {
+        "max_leaf_nodes": 7,
+        "alpha": 0.005,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.307133,
+        "normalized_bias": -0.158819,
+        "brier": 0.062641,
+        "precision_at_50pct": 0.752155,
+        "recall_at_50pct": 0.700803,
+        "f1_at_50pct": 0.725572
+      },
+      "objective": 1.3354054290355633
+    },
+    {
+      "name": "hybrid",
+      "params": {
+        "max_leaf_nodes": 15,
+        "alpha": 0.005,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.301435,
+        "normalized_bias": -0.165477,
+        "brier": 0.062641,
+        "precision_at_50pct": 0.752155,
+        "recall_at_50pct": 0.700803,
+        "f1_at_50pct": 0.725572
+      },
+      "objective": 1.3188029616839745
+    },
+    {
+      "name": "hybrid",
+      "params": {
+        "max_leaf_nodes": 31,
+        "alpha": 0.005,
+        "beta": 0.1
+      },
+      "validation": {
+        "n": 3502,
+        "positive_rate": 0.14220445459737294,
+        "normalized_mae": 0.303337,
+        "normalized_bias": -0.16919,
+        "brier": 0.062641,
+        "precision_at_50pct": 0.752155,
+        "recall_at_50pct": 0.700803,
+        "f1_at_50pct": 0.725572
+      },
+      "objective": 1.3243448874303279
+    }
+  ],
+  "duplicate_issue_sensitivity": {
+    "compared_materials": 1930,
+    "affected_materials": 400,
+    "materials_changed_at_least_10pct": 205,
+    "median_absolute_change_pct": 0.0
+  },
+  "source_notes": [
+    "Synthetic case data; no observed plant downtime or actual inventory service outcomes.",
+    "Current stock has no snapshot timestamp and is excluded from historical model features.",
+    "PR-to-promised-PO date is a planning lead-time proxy, not receipt lead time.",
+    "Maintenance plans lack a direct part mapping; no scheduled part demand is invented.",
+    "A/B/C/S criticality codes have no verified ranking or downtime cost mapping."
+  ]
+}

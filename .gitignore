@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+dist/
+.vercel/
+test-results/
+output/
+__pycache__/
+*.pyc

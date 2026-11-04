@@ -1,0 +1,1 @@
+kerjakan dengan betul
