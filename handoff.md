@@ -22,7 +22,7 @@ The UI is in English because the case deliverable is English. User communication
 - This root is a **new nested Git repository** so the unrelated parent `/Users/owfaris/Documents/lomba` repository is unaffected.
 - Initial commit on `main`: `a91f85b baseline: calibrated spare-part intelligence MVP`.
 - Requested work belongs on **`dev`**. Check `git status --short --branch` before editing. At the time of writing, this handoff is being finalized on `dev`.
-- Previously deployed production baseline: `https://caliber-spare-part-intelligence.vercel.app`. This revision has **not** been deployed to production; its current source is local on `dev`.
+- Previously deployed production baseline: `https://caliber-spare-part-intelligence.vercel.app`. This revision has **not** replaced that deployment. The separate public repository for this work is `https://github.com/owfarisz/caliber-2026-spare-part-ai`, with a self-contained GitHub Pages build from `dev` at `https://owfarisz.github.io/caliber-2026-spare-part-ai/`.
 - The user-provided `AGENTS.md` points to `/Users/owfaris/.codex/RTK.md`; in this environment, prefix shell commands with `rtk` (for example, `rtk npm run build`).
 - `.gitignore` excludes `output/`, `node_modules/`, `dist/`, `.vercel/`, test results, caches and `.DS_Store`. Screenshots under `output/qa/` are local QA artifacts and can be regenerated.
 
@@ -103,7 +103,7 @@ Negotiation dates are based on the **case decision date** (30 September 2026), n
 | `#/continuity` | Data continuity | Excel-derived counts and actual PR/item, movement source-row and functional-location IDs for anomalous dates, possible exact-repeat issues, and missing location criticality. No daily replay. |
 | `#/method` | Model & evidence | Baselines, test metrics, time split, source counts and interpretation guardrails. |
 
-The two initial inventory drafts are generated **from the same scenario API/model**, not hardcoded quantities, and labeled `Model-generated demo example`. Technician-created drafts carry the current what-if quantity, forecast, risk and assumptions. If the model says `Monitor`, a positive quantity is labeled a technician manual override; if stock is above the existing Max, this demo holds purchasing and disables PR creation. State persists in `sessionStorage` for that browser session only (`caliber-demo-drafts`, `caliber-drafts-seeded`, `caliber-material`). Inventory statuses `Pending inventory review`, `Ready for procurement check` and `Returned to technician` are prototype labels. There is no authenticated workflow, database write, real PR issuance or SAP integration. Do not present the button as actual submission.
+The two initial inventory drafts are generated **from the same scenario model**, not hardcoded quantities, and labeled `Model-generated demo example`. On the local Python site the scenario API runs `core/policy.py`; on GitHub Pages `web/src/static-api.js` mirrors that policy with a deterministic browser-local simulation. The random-number generators differ, so sampled risk estimates may vary slightly even though assumptions and guardrails match. Technician-created drafts carry the current what-if quantity, forecast, risk and assumptions. If the model says `Monitor`, a positive quantity is labeled a technician manual override; if stock is above the existing Max, this demo holds purchasing and disables PR creation. State persists in `sessionStorage` for that browser session only (`caliber-demo-drafts`, `caliber-drafts-seeded`, `caliber-material`). Inventory statuses `Pending inventory review`, `Ready for procurement check` and `Returned to technician` are prototype labels. There is no authenticated workflow, database write, real PR issuance or SAP integration. Do not present the button as actual submission.
 
 All explanatory AI panels use the requested copy: **“AI decision brief”** and **“✦ AI-assisted, explainable recommendation”**. These summaries are deterministic, evidence-based text, not claims that a generative language model independently verified the business recommendation.
 
@@ -145,6 +145,8 @@ Other key paths:
 - `web/tests/smoke.spec.js`: Playwright browser journeys and screenshots.
 - `playwright.config.js`, `vite.config.js`, `vercel.json`: local/browser/deployment wiring.
 - `scripts/audit_focus.py`: read-only candidate audit used to choose five materials; can rerun to inspect source distributions.
+- `scripts/export_static.py`, `web/public/case-data.json`, `web/src/static-api.js`: generated snapshot and browser-local API/policy for GitHub Pages. Refresh the JSON after changing source data or backend logic.
+- `.github/workflows/pages.yml`: builds and deploys the `dev` branch to the separate public GitHub Pages site.
 - `docs/superpowers/2026-11-04-dev-workflow-plan.md`: implementation plan and acceptance criteria for this revision.
 - `README.md`, `PRODUCT.md`, `DESIGN.md`, `SUBMISSION.md`: baseline project context; update them if the revision becomes the new delivered baseline.
 
@@ -174,6 +176,16 @@ rtk git status --short --branch
 
 The Python suite covers causal feature boundaries, zero-demand behavior, scenario monotonicity and max-policy draft guardrail, source-grain reconciliation, vendor evidence and continuity anomalies. Playwright exercises overview, simulator, methodology, desktop/mobile smoke, technician-to-inventory PR handoff, overstock/cold-start stories, continuity and graph autoplay/pause. Screenshots are regenerated in `output/qa/`. Inspect desktop captures visually after changing UI; mobile-specific refinement is deferred per user instruction.
 
+For the public static demo, regenerate and verify the exported case snapshot:
+
+```bash
+rtk python3 scripts/export_static.py
+rtk proxy env VITE_STATIC_DEMO=true VITE_SITE_BASE=/caliber-2026-spare-part-ai/ npm run build
+rtk proxy env VITE_STATIC_DEMO=true npm run test:e2e
+```
+
+The JSON export contains source-derived aggregates and the five featured material details. Its model forecasts were trained offline. Pages offers those five in search; the full 7,481-material catalog remains in SQLite for local/API use. The static simulator runs with a seeded 4,000-draw compound-Poisson approximation and the Python policy's stock caps/conflict logic. Supplier ratings remain visibly synthetic assumptions. The Pages workflow triggers on `dev` push and deploys under `/caliber-2026-spare-part-ai/`; check the GitHub Actions run, Pages settings and a public HTTP 200 after publishing.
+
 To rebuild the offline model, use the appropriate Python version/environment and `requirements-train.txt`, then run `rtk python3 -m pipeline.ingest` and `rtk python3 -m pipeline.train`. This overwrites generated data/model artifacts; compare row counts and untouched-test metrics before committing. Do not rerun training casually merely to change UI.
 
 ## 11. Known limitations and safe next steps
@@ -187,11 +199,11 @@ To rebuild the offline model, use the appropriate Python version/environment and
 7. Browser `sessionStorage` is demonstration state; it has no cross-user consistency, audit trail or server persistence. A real PR flow needs authenticated roles, revision history, API write controls and ERP confirmation.
 8. The negotiation date range is anchored to the Sep 2026 case timeline. For a live date, refresh demand and supply data first.
 9. Visual mobile polishing is intentionally deferred. Desktop is the judge-facing priority; existing responsive layout remains usable for smoke tests.
-10. Production Vercel still serves the baseline. If approved to publish `dev`, build, run all checks, regenerate the timestamped screenshots/source archive, deploy a preview first, inspect the live routes, then update `SUBMISSION.md` with the verified URL and commit SHA.
+10. Production Vercel still serves the baseline. The independent GitHub Pages demo publishes the `dev` source without changing that deployment. Verify the public Pages route and static JSON after each data refresh.
 
 ## 12. Immediate continuation checklist
 
-1. Confirm `dev` branch and clean commit state.
-2. Run all three verification commands above and inspect `output/qa/overview-desktop.png`, `scenario-desktop.png`, `inventory-desktop.png`, `continuity-desktop.png`, and `graph-desktop.png`.
-3. If any data assertion changes, verify the corresponding curated Excel tab and maintain source-vs-assumption labels.
-4. Keep all requested revisions on `dev`; avoid changes to the deployed production baseline unless the user explicitly asks to publish.
+1. Confirm `dev` branch, remote URL and clean commit state.
+2. Run the Python, standard frontend and static Pages checks above; inspect `output/qa/overview-desktop.png`, `scenario-desktop.png`, `inventory-desktop.png`, `continuity-desktop.png`, and `graph-desktop.png` after UI changes.
+3. If any data assertion changes, verify the corresponding curated Excel tab, regenerate `web/public/case-data.json`, and maintain source-vs-assumption labels.
+4. Keep all requested revisions on `dev`; leave the unrelated `owfarisz/caliber-final` repository and the existing production Vercel deployment untouched.

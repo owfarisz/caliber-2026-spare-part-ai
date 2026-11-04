@@ -1,8 +1,8 @@
 dataset/
+output/
 tests/
 docs/
-output/
-test-results/
-data/model.joblib
-node_modules/
-.git/
+scripts/
+*.md
+/CALIBER 2026 - Final Case Brief.pdf
+.github/

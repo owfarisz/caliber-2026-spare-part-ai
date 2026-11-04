@@ -13,7 +13,7 @@ rtk python3 -m pipeline.ingest
 rtk python3 -m pipeline.train
 ```
 
-The included `data/caliber.sqlite`, `data/model_report.json`, and `data/model.joblib` are already generated. In this environment, prefix commands with `rtk` per `AGENTS.md`. In two terminals, run:
+The included `data/caliber.sqlite`, `data/model_report.json`, and `data/model.joblib` are already generated. In this environment, prefix commands with `rtk` per `AGENTS.md`. For the full local API, run these in two terminals:
 
 ```bash
 rtk python3 -m api.index
@@ -23,7 +23,13 @@ rtk python3 -m api.index
 rtk npm run dev
 ```
 
-Open `http://127.0.0.1:5173`. The Vite server proxies `/api` to the Python API at port 8000. Build the static site with `rtk npm run build`. The Vercel config serves `dist` and the Python function from `api/index.py`, bundling read-only SQLite and the model report. Forecasts are calculated offline and stored per material; interactive scenarios use lightweight Python calculations at request time. This `dev` revision has not replaced the existing production deployment.
+Open `http://127.0.0.1:5173`. The Vite server proxies `/api` to the Python API at port 8000. The optional Vercel config serves `dist` and a read-only Python function. Forecasts are calculated offline and stored per material; interactive scenarios use lightweight policy calculations at request time.
+
+## Public GitHub Pages demo
+
+The `dev` branch publishes a self-contained demo at [GitHub Pages](https://owfarisz.github.io/caliber-2026-spare-part-ai/) from the [new project repository](https://github.com/owfarisz/caliber-2026-spare-part-ai). The Pages build uses `VITE_STATIC_DEMO=true`: `scripts/export_static.py` exports the Excel-derived overview, continuity exceptions, five featured material records, model evidence, and supplier advice to `web/public/case-data.json`. The browser runs a deterministic mirror of the Python inventory-policy simulator in `web/src/static-api.js`. No Python API or Vercel login is needed for the public demo. The full source SQLite catalog remains in the repository; the Pages search intentionally offers only the five judge-facing stories and labels that limit in the UI.
+
+To refresh the published data after changing ingestion, forecasts, or sourcing logic, run `rtk python3 scripts/export_static.py`, inspect the JSON/source labels, then run `rtk proxy env VITE_STATIC_DEMO=true VITE_SITE_BASE=/caliber-2026-spare-part-ai/ npm run build` and `rtk proxy env VITE_STATIC_DEMO=true npm run test:e2e`. Commit the refreshed JSON on `dev`; `.github/workflows/pages.yml` deploys it on push. The browser simulator uses the same policy assumptions and safeguards as Python but a different deterministic random-number generator, so individual Monte Carlo risk estimates can differ slightly. The public site is a case-timeline demo, not a live ERP system. This deployment does not replace the existing Vercel production baseline.
 
 ## Evidence and model choice
 
@@ -56,6 +62,6 @@ rtk npm run build
 rtk npm run test:e2e
 ```
 
-The Playwright tests exercise the six-page workflow and write screenshots to `output/qa/`. The existing production site still serves the baseline; deploy this branch only after reviewing the full dev changes. Its SQLite file is read-only on the serverless runtime; scenario requests do not persist edits, and demo PR state remains in the browser session. The original case brief is available from the model-evidence page.
+The Playwright tests exercise the six-page workflow and write screenshots to `output/qa/`. The existing Vercel production site still serves the baseline. SQLite is read-only on the optional Python runtime; GitHub Pages uses a generated JSON snapshot. Neither mode persists scenario edits, and demo PR state remains in the browser session. The original case brief is available from the model-evidence page.
 
 Project files are in `pipeline/` (ingest, feature engineering, tuning, evaluation), `core/` (stock policy), `api/` (read-only service), `web/` (UI), `data/` (generated database and report), and `tests/`.
